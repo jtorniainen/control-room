@@ -165,7 +165,8 @@ def get_input(scr, prompt_string):
 
 
 def create_session(session_name, configuration_file):
-    session = Session(session_name, configuration_file)
+    bridge_ip = '192.168.2.252'
+    session = Session(session_name, configuration_file, bridge_ip=bridge_ip)
     session.load_configuration()
     return session
 
@@ -305,7 +306,7 @@ def main(scr):
     curses.curs_set(0)
 
     # Place holder
-    bridge_ip = '***.***.*.***'
+    bridge_ip = '192.168.2.252'
 
     while is_running:
         scr.clear()
