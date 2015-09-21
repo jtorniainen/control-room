@@ -192,7 +192,7 @@ def start_session(scr):
             return session, 0
 
 
-def run_sequences(scr, sequences):
+def run_sequences(scr, session, sequences):
 
     # TODO: These two should be defined somewhere else
     MAX_BAR_LENGTH = 60
@@ -214,6 +214,8 @@ def run_sequences(scr, sequences):
                     sequence.update()
                 else:
                     sequence.start()
+                    with open(session.log_file, 'a') as f:
+                        f.write('[{}] Sequence "{}" started'.format(time.ctime(), sequence.name))
 
                 bar_len = round((sequence.remaining / sequence.duration) *
                                 MAX_BAR_LENGTH)
@@ -223,6 +225,8 @@ def run_sequences(scr, sequences):
                 scr.addstr(text_start + idx * 2 + 1, 5, ' ' * bar_len,
                            curses.color_pair(1))
                 if sequence.finished:
+                    with open(session.log_file, 'a') as f:
+                        f.write('[{}] Sequence "{}" finished'.format(time.ctime(), sequence.name))
                     current_sequence += 1
 
             elif idx == current_sequence and sequence.finished:
@@ -254,7 +258,9 @@ def run_session(scr, session):
     if not session.sequences:
         popup(scr, 'No sequence(s) found in current session! [Enter]')
     else:
-        run_sequences(scr, session.sequences)
+        with open(session.log_file, 'w') as f:
+            f.write('[{}] Session started'.format(time.ctime()))
+        run_sequences(scr, session, session.sequences)
         popup(scr, 'Session finished! [ENTER to exit]')
     return 0
 
@@ -266,7 +272,8 @@ def main_menu(scr, session):
     menu_items = ['Start new session', 'Run Session', 'Exit']
     info_items = {'Session name': session.name,
                   'Configuration file': session.configuration_file,
-                  'Log file': session.log_file}
+                  'Log file': session.log_file,
+                  'Bridge IP': session.bridge_ip}
     info_items = OrderedDict(info_items)
 
     for idx, item in enumerate(menu_items):
@@ -306,9 +313,6 @@ def main(scr):
 
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_CYAN)
     curses.curs_set(0)
-
-    # Place holder
-    bridge_ip = '192.168.2.252'
 
     while is_running:
         scr.clear()
