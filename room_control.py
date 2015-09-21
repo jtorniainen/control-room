@@ -117,10 +117,12 @@ class Session(object):
 
         # Set up hue lights
         if bridge_ip:
+            self.bridge_ip = bridge_ip
             self.bridge = phue.Bridge(bridge_ip)
             self.bridge.create_group('all', [1, 2, 3, 4, 5, 6, 7, 8, 9])
             self.bridge.set_group('all', 'on', False)
         else:
+            self.bridge_ip = None
             self.bridge = None
 
     def set_name(self, session_name):
