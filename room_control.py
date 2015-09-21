@@ -202,7 +202,7 @@ def run_sequences(scr, session, sequences):
     # Start run
     running = True
     current_sequence = 0
-    sequences[0].start()
+    # sequences[0].start()
 
     while running:
         scr.clear()
@@ -217,7 +217,7 @@ def run_sequences(scr, session, sequences):
                 else:
                     sequence.start()
                     with open(session.log_file, 'a') as f:
-                        f.write('[{}] Sequence "{}" started'.format(time.ctime(), sequence.name))
+                        f.write('[{}] Sequence "{}" started\n'.format(time.ctime(), sequence.name))
 
                 bar_len = round((sequence.remaining / sequence.duration) *
                                 MAX_BAR_LENGTH)
@@ -228,7 +228,7 @@ def run_sequences(scr, session, sequences):
                            curses.color_pair(1))
                 if sequence.finished:
                     with open(session.log_file, 'a') as f:
-                        f.write('[{}] Sequence "{}" finished'.format(time.ctime(), sequence.name))
+                        f.write('[{}] Sequence "{}" finished\n'.format(time.ctime(), sequence.name))
                     current_sequence += 1
 
             elif idx == current_sequence and sequence.finished:
@@ -261,7 +261,7 @@ def run_session(scr, session):
         popup(scr, 'No sequence(s) found in current session! [Enter]')
     else:
         with open(session.log_file, 'w') as f:
-            f.write('[{}] Session started'.format(time.ctime()))
+            f.write('[{}] Session started\n'.format(time.ctime()))
         run_sequences(scr, session, session.sequences)
         popup(scr, 'Session finished! [ENTER to exit]')
     return 0
