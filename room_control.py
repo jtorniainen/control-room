@@ -12,6 +12,7 @@
 import curses
 import time
 from configparser import ConfigParser
+from collections import OrderedDict
 import pyglet
 import phue
 
@@ -137,7 +138,7 @@ class Session(object):
 def read_config(filename, bridge):
     cfg = ConfigParser()
     cfg.read(filename)
-    cfg = dict(cfg)
+    cfg = OrderedDict(cfg)
 
     if 'DEFAULT' in cfg.keys():
         cfg.pop('DEFAULT')
@@ -266,6 +267,7 @@ def main_menu(scr, session):
     info_items = {'Session name': session.name,
                   'Configuration file': session.configuration_file,
                   'Log file': session.log_file}
+    info_items = OrderedDict(info_items)
 
     for idx, item in enumerate(menu_items):
         scr.addstr(start_y_menu + idx, start_x, str(idx + 1) + '. ',
